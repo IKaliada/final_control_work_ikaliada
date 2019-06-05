@@ -1,0 +1,90 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="market_1" author="iikaliada@gmail.com">
+        <createTable tableName="user">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="role_id" type="bigint">
+                <constraints foreignKeyName="true" nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="market_2" author="iikaliada@gmail.com">
+        <createTable tableName="role">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="true"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="market_3" author="iikaliada@gmail.com">
+        <createTable tableName="businessCard">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fullname" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="working_telephone" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints foreignKeyName="true" nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="iikaliada@gmail.com" id="market_4">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="businessCard" onUpdate="NO ACTION" onDelete="CASCADE"
+                                 constraintName="FK_CARD"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
+    <changeSet author="iikaliada@gmail.com" id="market_5">
+        <addForeignKeyConstraint baseColumnNames="role_id"
+                                 baseTableName="user" onUpdate="NO ACTION" constraintName="FK_ROLE"
+                                 referencedColumnNames="id" referencedTableName="role"/>
+    </changeSet>
+    <changeSet author="iikaliada@gmail.com" id="market_6">
+        <insert catalogName="final_control_work"
+                dbms="mysql"
+                schemaName="final_control_work"
+                tableName="role">
+            <column name="name" type="varchar(255)" value="ADMINISTRATOR"/>
+        </insert>
+    </changeSet>
+    <changeSet author="iikaliada@gmail.com" id="market_7">
+        <insert catalogName="final_control_work"
+                dbms="mysql"
+                schemaName="final_control_work"
+                tableName="role">
+            <column name="name" type="varchar(255)" value="CUSTOMER"/>
+        </insert>
+    </changeSet>
+    <changeSet author="iikaliada@gmail.com" id="market_8">
+        <sql>insert into user (username, password, role_id) values ('admin@su.com', '1234',
+            (SELECT r.id FROM role r WHERE r.name =
+            ('ADMINISTRATOR')))
+        </sql>
+    </changeSet>
+    <changeSet author="iikaliada@gmail.com" id="market_9">
+        <sql>insert into user (username, password, role_id) values ('cus@cus.com', '1234',
+            (SELECT r.id FROM role r WHERE r.name =
+            ('CUSTOMER')))
+        </sql>
+    </changeSet>
+</databaseChangeLog>
